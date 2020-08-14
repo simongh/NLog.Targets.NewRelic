@@ -1,4 +1,6 @@
 # NLog.Targets.NewRelic
+[![Build status](https://ci.appveyor.com/api/projects/status/sdnvx7eo58o1dv2g?svg=true)](https://ci.appveyor.com/project/SimonHalsey/nlog-targets-newrelic)
+
 
 An NLog target for the NewRelic logging platform.
 This target allos you to ship logs to the NewRelic platform. You'll need to make sure logging is included as part of your subscription. Information on logging in NewRelic can be found [Here](https://docs.newrelic.com/docs/logs/log-management/get-started/get-started-log-management)
