@@ -1,0 +1,25 @@
+version: '1.0.{build}'
+image: Visual Studio 2019
+configuration: Release
+
+dotnet_csproj:
+  patch: true
+  file: '**\*.csproj'
+  version: '{version}'
+  package_version: '{version}'
+  assembly_version: '{version}'
+  file_version: '{version}'
+  informational_version: '{version}'
+
+before_build:
+- ps: nuget restore .\src\
+
+build:
+  project: .\src\Nlog.NewRelic.sln
+  publish_nuget: true
+  verbosity: minimal
+
+deploy:
+- provider: NuGet
+  api_key:
+    secure: E+Gn1uEUsEQrgRE0Mi7fTEHqvSU+mpF5XJZ3TfAk28W2VCjgp1bEMZb4dru25ewH
