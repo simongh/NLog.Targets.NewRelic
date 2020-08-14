@@ -9,6 +9,8 @@ The endpoint location can be set to EU if that's where you're located.
 
 Multiple ContextProperty elements can be defined. These are sent as attributes to NewRelic. The layout will be rendered by NLog before it's sent.
 
+Install pacakge from from [NuGet](https://www.nuget.org/packages/nlog.targets.newrelic/)
+
 ## Sample Configuration
 
 ```xml
