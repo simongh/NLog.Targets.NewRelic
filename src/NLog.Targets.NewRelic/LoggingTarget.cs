@@ -59,7 +59,7 @@ namespace NLog.Targets.NewRelic
 			{
 				var logItem = new Log
 				{
-					Timestamp = new DateTimeOffset(item.TimeStamp).ToUnixTimeSeconds(),
+					Timestamp = new DateTimeOffset(item.TimeStamp).ToUnixTimeMilliseconds(),
 					Message = RenderLogEvent(Layout, item),
 					Attributes = ContextProperties.ToDictionary(k => k.Name, v => (object)v.Layout.Render(item))
 				};
