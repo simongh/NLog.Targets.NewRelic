@@ -120,11 +120,11 @@ namespace NLog.Targets.NewRelic
 			if (InternalLogger.IsTraceEnabled)
 				InternalLogger.Trace("json:{0}", await requestMessage.Content.ReadAsStringAsync());
 
-			//var result = await _client.SendAsync(requestMessage, cancellationToken);
-			//if (result.IsSuccessStatusCode)
-			//	return;
+			var result = await _client.SendAsync(requestMessage, cancellationToken);
+			if (result.IsSuccessStatusCode)
+				return;
 
-			//InternalLogger.Error("Send failed: {0} - {1}", result.StatusCode, await result.Content.ReadAsStringAsync());
+			InternalLogger.Error("Send failed: {0} - {1}", result.StatusCode, await result.Content.ReadAsStringAsync());
 		}
 	}
 }
