@@ -22,6 +22,8 @@ namespace NLog.Targets.NewRelic
 		private readonly HttpClient _client;
 		private readonly JsonSerializerSettings _settings;
 
+		private string Hostname => Environment.MachineName;
+
 		public string Url => EndpointLocation == Location.US ? "https://log-api.newrelic.com/log/v1" : "https://log-api.eu.newrelic.com/log/v1";
 
 		public Location EndpointLocation { get; set; }
@@ -29,6 +31,8 @@ namespace NLog.Targets.NewRelic
 		public string LicenceKey { get; set; }
 
 		public string InsertKey { get; set; }
+
+		public string Service { get; set; }
 
 		public LoggingTarget()
 		{
@@ -55,20 +59,24 @@ namespace NLog.Targets.NewRelic
 			{
 				var logItem = new Log
 				{
-					TimeStamp = new DateTimeOffset(item.TimeStamp).ToUnixTimeSeconds(),
+					Timestamp = new DateTimeOffset(item.TimeStamp).ToUnixTimeSeconds(),
 					Message = RenderLogEvent(Layout, item),
 					Attributes = ContextProperties.ToDictionary(k => k.Name, v => (object)v.Layout.Render(item))
 				};
 
-				logItem.Attributes.Add("logger", item.LoggerName);
-				logItem.Attributes.Add("level", item.Level);
+				logItem.Attributes["logger"] = item.LoggerName;
+				logItem.Attributes["level"] = item.Level;
+				logItem.Attributes["hostname"] = Hostname;
+
+				if (Service != null)
+					logItem.Attributes["service"] = Service;
 
 				message.Logs.Add(logItem);
 			}
 
 			var requestMessage = new HttpRequestMessage(HttpMethod.Post, Url)
 			{
-				Content = new StringContent(JsonConvert.SerializeObject(message, _settings)),
+				Content = new StringContent(JsonConvert.SerializeObject(new[] { message }, _settings)),
 			};
 
 			if (!string.IsNullOrEmpty(InsertKey))
