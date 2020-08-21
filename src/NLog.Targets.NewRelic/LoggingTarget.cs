@@ -33,6 +33,8 @@ namespace NLog.Targets.NewRelic
 
 		public string Service { get; set; }
 
+		public bool LogNamedProperties { get; set; }
+
 		public LoggingTarget()
 		{
 			_client = new HttpClient();
@@ -62,7 +64,7 @@ namespace NLog.Targets.NewRelic
 					Message = RenderLogEvent(Layout, item),
 				};
 
-				if (item.HasProperties)
+				if (item.HasProperties && LogNamedProperties)
 				{
 					foreach (var value in item.Properties)
 					{

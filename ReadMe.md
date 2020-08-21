@@ -7,7 +7,11 @@ This target allos you to ship logs to the NewRelic platform. You'll need to make
 
 The endpoint location can be set to EU if that's where you're located.
 
+System allows to identify the system generating log messages.
+
 Multiple ContextProperty elements can be defined. These are sent as attributes to NewRelic. The layout will be rendered by NLog before it's sent.
+
+Switch LogNamedProperties to true to have property names nad values logged as attributes. This allows you to use the structured logging aspects of NLog.
 
 Install pacakge from from [NuGet](https://www.nuget.org/packages/nlog.targets.newrelic/)
 
@@ -19,7 +23,7 @@ Install pacakge from from [NuGet](https://www.nuget.org/packages/nlog.targets.ne
 </extensions>
 
 <targets>
-    <target xsi:type="NewRelic" name="newrelic" layout="${message}" licenceKey="your licence key" endpointLocation="EU|US">
+    <target xsi:type="NewRelic" name="newrelic" layout="${message}" licenceKey="your licence key" endpointLocation="EU|US" system="test system" logNamedProperties="false">
       <ContextProperty name="environment" layout="test" />
     </target>
 </targets>
