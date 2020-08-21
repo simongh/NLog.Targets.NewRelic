@@ -71,6 +71,15 @@ namespace NLog.Targets.NewRelic
 				if (Service != null)
 					logItem.Attributes["service"] = Service;
 
+				if (item.Exception != null)
+				{
+					if (!string.IsNullOrEmpty(item.Exception.Message))
+						logItem.Attributes["exception_message"] = item.Exception.Message;
+
+					if (!string.IsNullOrEmpty(item.Exception.StackTrace))
+						logItem.Attributes["exception_stack_trace"] = item.Exception.StackTrace;
+				}
+
 				message.Logs.Add(logItem);
 			}
 
