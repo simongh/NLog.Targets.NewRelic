@@ -3,7 +3,6 @@ using Newtonsoft.Json.Serialization;
 using NLog.Common;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -61,8 +60,20 @@ namespace NLog.Targets.NewRelic
 				{
 					Timestamp = new DateTimeOffset(item.TimeStamp).ToUnixTimeMilliseconds(),
 					Message = RenderLogEvent(Layout, item),
-					Attributes = ContextProperties.ToDictionary(k => k.Name, v => (object)v.Layout.Render(item))
 				};
+
+				if (item.HasProperties)
+				{
+					foreach (var value in item.Properties)
+					{
+						logItem.Attributes[value.Key.ToString()] = value.Value;
+					}
+				}
+
+				foreach (var property in ContextProperties)
+				{
+					logItem.Attributes[property.Name] = property.Layout.Render(item);
+				}
 
 				logItem.Attributes["logger"] = item.LoggerName;
 				logItem.Attributes["level"] = item.Level;
@@ -109,11 +120,11 @@ namespace NLog.Targets.NewRelic
 			if (InternalLogger.IsTraceEnabled)
 				InternalLogger.Trace("json:{0}", await requestMessage.Content.ReadAsStringAsync());
 
-			var result = await _client.SendAsync(requestMessage, cancellationToken);
-			if (result.IsSuccessStatusCode)
-				return;
+			//var result = await _client.SendAsync(requestMessage, cancellationToken);
+			//if (result.IsSuccessStatusCode)
+			//	return;
 
-			InternalLogger.Error("Send failed: {0} - {1}", result.StatusCode, await result.Content.ReadAsStringAsync());
+			//InternalLogger.Error("Send failed: {0} - {1}", result.StatusCode, await result.Content.ReadAsStringAsync());
 		}
 	}
 }
